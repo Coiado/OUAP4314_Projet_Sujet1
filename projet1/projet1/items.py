@@ -9,6 +9,11 @@ import scrapy
 
 
 class Projet1Item(scrapy.Item):
-    localisation = scrapy.Field()
+    title = scrapy.Field()
     adresse = scrapy.Field()
-    pass
+    historique = scrapy.Field()
+    statut = scrapy.Field()
+    technique = scrapy.Field()
+    siecle = scrapy.Field()
+    elements = scrapy.Field()
+    date_protection= scrapy.Field()

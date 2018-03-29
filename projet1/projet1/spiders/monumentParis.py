@@ -16,9 +16,35 @@ class MonumentparisSpider(scrapy.Spider):
             yield Request(link, callback=self.parse_monument)
 
     def parse_monument(self, response):
-        all_td = [response.css("table")[-2].css("tr")]
-        for td in all_td:
-            title = response.css("td font n::text").extract()
-            print(title)
-            #value = response.css("td.champ::text").extract()
-            #print(title + " : " + value)
+        all_tr = response.css("table")[-2].css("tr")
+        item = Projet1Item()
+        flag = 0
+        for tr in all_tr:
+            title, value = tr.css("td")
+            title = title.css("n::text").extract_first()
+            value = value.css("n::text").extract_first() or value.css("b::text").extract_first()
+            if flag == 0:
+                item["title"] = value
+                flag = 1
+            if title.strip() and value.strip():
+                if "Localisation" in title:
+                    item["localisation"] = value
+                elif "Adresse" in title: 
+                    item["adresse"] = value
+                elif "Historique" in title: 
+                    item["historique"] = value
+                elif "Statut propriété" in title: 
+                    item["statut"] = value
+                elif "Technique décor" in title: 
+                    item["technique"] = value
+                elif "Siècle" in title: 
+                    item["siecle"] = value
+                elif "Eléments MH" in title: 
+                    item["elements"] = value
+                elif "Date protection" in title: 
+                    item["date_protection"] = value
+
+                
+        print(item)
+        yield item
+                
