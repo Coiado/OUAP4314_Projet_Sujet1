@@ -67,7 +67,8 @@ ROBOTSTXT_OBEY = False
 ITEM_PIPELINES = {
     'projet1.pipelines.JsonWriterPipeline': 800,
 }
-
+MONGO_URI = 'mongodb://localhost:27017'
+MONGO_DATABASE = 'DataEngineering'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
