@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy import Request
+from pymongo import MongoClient
 
 from ..items import Projet1Item
 
@@ -19,6 +20,7 @@ class MonumentparisSpider(scrapy.Spider):
         all_tr = response.css("table")[-2].css("tr")
         item = Projet1Item()
         flag = 0
+	
         for tr in all_tr:
             title, value = tr.css("td")
             title = title.css("n::text").extract_first()
@@ -43,6 +45,19 @@ class MonumentparisSpider(scrapy.Spider):
                     item["elements"] = value
                 elif "Date protection" in title: 
                     item["date_protection"] = value
+	try:
+	   client = MongoClient()
+	   print("Connected sucessfully!!")
+	except:
+           print("Could not connect to MongoDB")
+	
+	#database
+	db = client.database
+	
+	collection = db.monument_Paris
+
+	rec = collection.insert_one(item)
+	
 
                 
         print(item)
