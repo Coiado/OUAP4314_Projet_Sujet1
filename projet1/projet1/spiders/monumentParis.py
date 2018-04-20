@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy import Request
+from scrapy import Spider
 from pymongo import MongoClient
 
-from ..items import Projet1Item
+from projet1.items import Projet1Item
 
 
-class MonumentparisSpider(scrapy.Spider):
+class MonumentparisSpider(Spider):
     name = 'monumentParis'
     allowed_domains = ['culture.gouv.fr']
     start_urls = ['http://www2.culture.gouv.fr/public/mistral/dapamer_fr?ACTION=RETROUVER_TITLE&LEVEL=1&GRP=0&REQ=((paris)%3aLOCA%2cPLOC)']
 
     def parse(self, response):
+        all_links = [response.urljoin(elt) for elt in response.css("table")[-1].css("a::attr(href)").extract()]
+        for link in all_links:
+            yield Request(link, callback=self.parse_page)
+   
+    def parse_page(self, response):
         all_links = [response.urljoin(elt) for elt in response.css("table a::attr(href)").extract()]
         for link in all_links:
             yield Request(link, callback=self.parse_monument)
@@ -45,21 +51,7 @@ class MonumentparisSpider(scrapy.Spider):
                     item["elements"] = value
                 elif "Date protection" in title: 
                     item["date_protection"] = value
-	try:
-	   client = MongoClient()
-	   print("Connected sucessfully!!")
-	except:
-           print("Could not connect to MongoDB")
-	
-	#database
-	db = client.database
-	
-	collection = db.monument_Paris
-
-	rec = collection.insert_one(item)
-	
-
-                
+    
         print(item)
         yield item
                 

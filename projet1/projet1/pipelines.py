@@ -1,37 +1,31 @@
-import json
-import logging
 import pymongo
 
-class JsonWriterPipeline(object):
+from scrapy.conf import settings
+from scrapy.exceptions import DropItem
+from scrapy import log
 
-    collection_name = 'monumentsParis'
+class MongoDBPipeline(object):
 
-    def __init__(self, mongo_uri, mongo_db):
-        self.mongo_uri = mongo_uri
-        self.mongo_db = mongo_db
-        
-    @classmethod
-    def from_crawler(cls, crawler):
-        ## pull in information from settings.py
-        return cls(
-            mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+    def __init__(self):
+        connection = pymongo.MongoClient(
+            settings['MONGODB_SERVER'],
+            settings['MONGODB_PORT']
         )
-
-    def open_spider(self, spider):
-        ## initializing spider
-        ## opening db connection
-        self.client = pymongo.MongoClient(self.mongo_uri)
-        self.db = self.client[self.mongo_db]
-        ## self.file = open('monuments.js', 'w')
+        db = connection[settings['MONGODB_DB']]
+        self.collection = db[settings['MONGODB_COLLECTION']]
 
     def close_spider(self, spider):
         ## clean up when spider is closed
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert(dict(item))
-        logging.debug("Post added to MongoDB")
-        ## line = json.dumps(dict(item)) + "\n"
-        ## self.file.write(line)
+        valid = True
+        for data in item:
+            if not data:
+                valid = False
+                raise DropItem("Missing {0}!".format(data))
+        if valid:
+            self.collection.insert(dict(item))
+            log.msg("Question added to MongoDB database!",
+                    level=log.DEBUG, spider=spider)
         return item

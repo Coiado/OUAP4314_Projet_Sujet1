@@ -65,10 +65,15 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'projet1.pipelines.JsonWriterPipeline': 800,
+    'projet1.pipelines.MongoDBPipeline': 800,
 }
-MONGO_URI = 'mongodb://localhost:27017'
-MONGO_DATABASE = 'DataEngineering'
+
+#MONGO_URI = 'mongodb://localhost:27017'
+MONGODB_SERVER = "localhost"
+MONGODB_PORT = 27017
+MONGODB_DB = 'DataEngineering'
+MONGODB_COLLECTION = 'monumentsParis'
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
