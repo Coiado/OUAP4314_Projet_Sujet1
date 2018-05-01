@@ -1,13 +1,20 @@
-datastore:
+db:
   image: mongo:3.0.2
-  ports:
-    - "27017:27017"
 frontend:
   build: .
   command: python -u app.py
   ports:
     - "5000:5000"
   volumes:
-    - .:/todo
+    - .:/projet1
   links:
-    - datastore
+    - db
+scrapy:
+  build: .
+  command: scrapy crawl monumentParis
+  volumes:
+    - .:/projet1
+  links:
+    - db
+
+
