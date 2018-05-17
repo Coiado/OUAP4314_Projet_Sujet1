@@ -1,5 +1,12 @@
 db:
   image: mongo:3.0.2
+scrapy:
+  build: .
+  command: scrapy crawl monumentParis
+  volumes:
+    - .:/projet1
+  links:
+    - db
 frontend:
   build: .
   command: python -u app.py
@@ -9,12 +16,3 @@ frontend:
     - .:/projet1
   links:
     - db
-scrapy:
-  build: .
-  command: scrapy crawl monumentParis
-  volumes:
-    - .:/projet1
-  links:
-    - db
-
-
