@@ -13,6 +13,12 @@ We scrap and store data in a database from the website : http://www2.culture.gou
 $ git clone https://github.com/Coiado/OUAP4314_Projet_Sujet1.git
 ```
 
+* And then change branch:
+
+```
+$ git checkout test_docker
+```
+
 ### Docker
 
 * At first, be sure you have docker install in your computer and you are logged in docker, to run docker in mac or windows you need to use docker toolbox, to see more details give a look here [here](https://docs.docker.com/toolbox/overview/ )
