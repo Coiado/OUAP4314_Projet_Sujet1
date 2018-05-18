@@ -15,7 +15,7 @@ from pymongo import MongoClient
 app = Flask(__name__)
 
 address = []
-client = MongoClient(os.environ['PROJET1_DB_1_PORT_27017_TCP_ADDR'], 27017)
+client = MongoClient('mongodb', 27017)
 db = client.DataEngineering
 
 @app.route('/search', methods=['GET', 'POST'])
